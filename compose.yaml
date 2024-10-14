@@ -1,0 +1,6 @@
+services:
+  handler:
+    build: .
+    environment:
+      RUST_LOG: INFO
+      nats_server: nats://nats:4222

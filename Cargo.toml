@@ -1,0 +1,17 @@
+[package]
+name = "bridge-handler"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+regex = "1.11.0"
+serde = { version = "1.0.210", features = ["derive"] }
+async-nats = { version = "0.37.0"}
+tokio = { version = "1.40.0", features = ["full"] }
+futures = "0.3.31"
+serde_derive = "1.0.210"
+serde_json = "1.0.128"
+liquid = "0.26.9"
+once_cell = "1.20.2"
+log = "0.4.22"
+env_logger = "0.11.5"
