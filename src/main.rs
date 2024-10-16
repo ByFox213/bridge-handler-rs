@@ -19,7 +19,7 @@ async fn main() -> Result<(), async_nats::Error> {
     let nc = env.connect_nats().await?;
     let js = async_nats::jetstream::new(nc.clone());
 
-    let mut subscriber = nc.subscribe("teesports.handler").await?;
+    let mut subscriber = nc.queue_subscribe("teesports.handler", "handler".to_string()).await?;
 
     info!("Handler started");
     while let Some(message) = subscriber.next().await {

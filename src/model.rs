@@ -94,7 +94,7 @@ impl Env {
     pub fn get_env() -> Result<Self, Box<dyn Error + Send + Sync>> {
         debug!("Creating a structure from env");
         Ok(Env {
-            nats_server: env::var("nats_server").unwrap_or_else(|_| "127.0.0.1".to_string()),
+            nats_server: env::var("nats_server").unwrap_or_else(|_| "nats://127.0.0.1:4222".to_string()),
             nats_user: env::var("nats_user").ok(),
             nats_password: env::var("nats_password").ok(),
             text: template(env::var("text").unwrap_or_else(|_| "{{text}}: {{player}}".to_string())),
