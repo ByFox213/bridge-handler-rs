@@ -37,26 +37,16 @@ impl Msg {
 }
 
 
-#[derive(Default, Debug, Deserialize)]
+#[derive(Default, Debug, PartialEq, Deserialize)]
 pub struct MsgHandler {
     pub server_name: String,
     pub message_thread_id: String,
     pub text: String,
 }
 
-impl PartialEq for MsgHandler {
-    fn eq(&self, other: &Self) -> bool {
-        self.server_name == other.server_name &&
-            self.message_thread_id == other.message_thread_id &&
-            self.text == other.text
-    }
-}
-
-impl Eq for MsgHandler {}
-
 impl MsgHandler {
     pub fn is_default(&self) -> bool {
-        *self == MsgHandler::default() // Dereference self to compare values
+        *self == MsgHandler::default()
     }
 }
 

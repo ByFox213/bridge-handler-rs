@@ -51,7 +51,7 @@ async fn main() -> Result<(), async_nats::Error> {
             );
 
             let name = format_regex(
-                    format_text(name, env.block_text_in_nickname.clone()
+                format_text(name, env.block_text_in_nickname.clone()
                 ), env.nickname_regex.clone()
             );
 
@@ -79,5 +79,3 @@ async fn main() -> Result<(), async_nats::Error> {
 
     Ok(())
 }
-
-
