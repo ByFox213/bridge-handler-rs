@@ -7,7 +7,7 @@ RUN apk --update add git build-base && \
 
 FROM alpine:3.17
 
-COPY emojis.txt ./emojis.txt
+COPY --from=rust-build /app_build/emojis.txt ./emojis.txt
 COPY --from=rust-build /app_build/target/release/bridge-handler /tw/handler
 
 CMD ["/tw/handler"]

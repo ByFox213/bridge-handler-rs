@@ -1,3 +1,5 @@
+use std::process::exit;
+use dotenv::dotenv;
 use futures::StreamExt;
 use log::{debug, info, error};
 use crate::emojis::replace_from_emoji;
@@ -12,11 +14,22 @@ mod util;
 
 #[tokio::main]
 async fn main() -> Result<(), async_nats::Error> {
+    match dotenv() {
+        Ok(_) => {}
+        Err(err) => {error!("Failed open file .env: {}", err)}
+    };
     let env = Env::get_env()?;
 
     env_logger::init();
 
-    let nc = env.connect_nats().await?;
+    let nc = match env.connect_nats().await {
+        Ok(nc) => {nc}
+        Err(err) => {
+            eprintln!("Failed connected to nats: {}", err);
+            error!("Failed connected to nats: {}", err);
+            exit(0)
+        }
+    };
     let js = async_nats::jetstream::new(nc.clone());
 
     let mut subscriber = nc.queue_subscribe("teesports.handler", "handler".to_string()).await?;
