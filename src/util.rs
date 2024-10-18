@@ -4,7 +4,7 @@ use regex::{Captures, Regex};
 use crate::model::{Env, RegexModel};
 
 
-pub fn template(template: String) -> Template {
+pub fn template(template: &str) -> Template {
     if !template.is_empty() {
         debug!("template: {}", template);
     }
@@ -12,7 +12,7 @@ pub fn template(template: String) -> Template {
     ParserBuilder::with_stdlib()
         .build()
         .expect("Template error created")
-        .parse(&template)
+        .parse(template)
         .expect("Template error parsed")
 }
 
