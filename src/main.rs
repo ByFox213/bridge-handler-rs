@@ -32,7 +32,7 @@ async fn main() -> Result<(), async_nats::Error> {
     };
     let js = async_nats::jetstream::new(nc.clone());
 
-    let mut subscriber = nc.queue_subscribe("teesports.handler", "handler".to_string()).await?;
+    let mut subscriber = nc.queue_subscribe("tw.handler", "handler".to_string()).await?;
 
     info!("Handler started");
     while let Some(message) = subscriber.next().await {
@@ -81,10 +81,10 @@ async fn main() -> Result<(), async_nats::Error> {
                 Err(err) => {error!("Json Serialize Error: {}", err); break}
             };
 
-            debug!("sended json to teesports.messages: {}", json);
-            js.publish("teesports.messages", json.into())
+            debug!("sended json to tw.messages: {}", json);
+            js.publish("tw.messages", json.into())
                 .await
-                .expect("Error publish message to teesports.messages");
+                .expect("Error publish message to tw.messages");
             break
         }
     }
