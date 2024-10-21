@@ -6,7 +6,7 @@ use crate::util::{format_regex, format_text, generate_text};
 
 
 pub async fn chat_handler(msg: MsgHandler, env: &Env, caps: Captures<'_ >, pattern: &RegexModel) -> String {
-    let Some((name, text)) = generate_text(caps, pattern, &env) else {
+    let Some((name, text)) = generate_text(caps, pattern, env) else {
         return String::default()
     };
 
@@ -91,6 +91,22 @@ pub async fn status_handler(msg: MsgHandler, caps: Captures<'_>, pattern: &Regex
 
     generator(data, msg.server_name.clone(), msg.message_thread_id.clone(), pattern.name.clone())
 }
+
+pub fn generate_console(msg: MsgHandler, caps: Captures<'_>) -> String {
+    let Some(data) = caps.get(1) else { return String::default() };
+    let Some(text) = caps.get(2) else { return String::default() };
+
+    let data = DataStatus {
+        time: Some(data.as_str().to_string()),
+        user_id: text.as_str().to_string(),
+        addr: "".to_string(),
+        name: "".to_string(),
+        version: None,
+    };
+
+    generator(data, msg.server_name.clone(), msg.message_thread_id.clone(), "console".to_string())
+}
+
 
 fn generator(data: DataStatus, server_name: String, message_thread_id: String, pattern_name: String) -> String {
     let send_msg = Msg {

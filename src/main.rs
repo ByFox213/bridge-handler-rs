@@ -2,7 +2,7 @@ use std::process::exit;
 use dotenv::dotenv;
 use futures::StreamExt;
 use log::{debug, info, error};
-use crate::handler::{chat_handler, inf_status_regex, status_handler, tw_status_handler};
+use crate::handler::{chat_handler, generate_console, inf_status_regex, status_handler, tw_status_handler};
 use crate::model::{Env, MsgHandler};
 use crate::patterns::DD_PATTERNS;
 
@@ -63,6 +63,7 @@ async fn main() -> Result<(), async_nats::Error> {
                 "InfStatusRegex" => {inf_status_regex(msg, caps, pattern).await},
                 "SStatusRegex" => {status_handler(msg, caps, pattern, false).await},
                 "StatusRegex" => {status_handler(msg, caps, pattern, true).await},
+                "console" => {generate_console(msg, caps)}
                 _ => {chat_handler(msg, &env, caps, pattern).await}
             };
 

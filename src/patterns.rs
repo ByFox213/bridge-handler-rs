@@ -20,7 +20,6 @@ pub static DD_PATTERNS: Lazy<Vec<RegexModel>> = Lazy::new(|| {
         RegexModel::new("SStatusRegex", Regex::new(r"\[(\d{2}:\d{2}:\d{2})]\[server]:\s*id=(\d+)\s*addr=(\d+\.\d+\.\d+\.\d+:\d+)\s*(?:client=(\d+)\s*)?(?:sevendown=(\d+)\s*)?socket=\d+\s*?name='([^']+)'\s*(?:score=\d+\s*)?(?:secure=\w+\s*)?(?:flags=(\d+)\s*)?").unwrap(), template("")),
         RegexModel::new("StatusRegex", Regex::new(r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}|\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}])\s*(?:I\s*server:|\[server]:)\s*id=(\d+\s*) addr=(\d+\.\d+\.\d+\.\d+:\d+\s*) name='([^']+)' \s*(?:client=(\d+\s*))? (?:secure=\w+\s*)? (?:flags=\d+\s*)?").unwrap(), template("")),
         RegexModel::new("StatusRegex", Regex::new(r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) I server: id=(\d+) addr=<\{([\d.]+:\d+)}> name='([^']+)' client=(\d+)").unwrap(), template("")),
-
-
+        RegexModel::new("console", Regex::new(r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) I console: (.+)").unwrap(), template(""))
     ]
 });

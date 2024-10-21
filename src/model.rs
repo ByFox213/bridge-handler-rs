@@ -82,9 +82,9 @@ impl Env {
             nats_server: env::var("nats_server").unwrap_or_else(|_| "nats://127.0.0.1:4222".to_string()),
             nats_user: env::var("nats_user").ok(),
             nats_password: env::var("nats_password").ok(),
-            text: template(&env::var("text").unwrap_or_else(|_| "{{text}}: {{player}}".to_string())),
-            text_leave: env::var("text_leave").unwrap_or_else(|_| "leave player".to_string()),
-            text_join: env::var("text_join").unwrap_or_else(|_| "join player".to_string()),
+            text: template(&env::var("text").unwrap_or_else(|_| "{{player}} {{text}}".to_string())),
+            text_leave: env::var("text_leave").unwrap_or_else(|_| "has left the game".to_string()),
+            text_join: env::var("text_join").unwrap_or_else(|_| "has join the game".to_string()),
             nickname_regex: env::var("nickname_regex")
                 .unwrap_or_else(|_| "".to_string())
                 .split(',')
