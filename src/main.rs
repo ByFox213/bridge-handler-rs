@@ -2,15 +2,15 @@ use std::process::exit;
 use dotenv::dotenv;
 use futures::StreamExt;
 use log::{debug, info, error};
-use crate::emojis::replace_from_emoji;
-use crate::model::{Env, Msg, MsgHandler};
+use crate::handler::{chat_handler, inf_status_regex, status_handler, tw_status_handler};
+use crate::model::{Env, MsgHandler};
 use crate::patterns::DD_PATTERNS;
-use crate::util::{format_regex, format_text, generate_text};
 
 mod emojis;
 mod model;
 mod patterns;
 mod util;
+mod handler;
 
 #[tokio::main]
 async fn main() -> Result<(), async_nats::Error> {
@@ -54,32 +54,22 @@ async fn main() -> Result<(), async_nats::Error> {
             if !pattern.regex.is_match(&msg.text) {
                 continue;
             }
-            let caps = pattern.regex.captures(&msg.text).unwrap();
-            let Some((name, text)) = generate_text(caps, pattern, &env) else {break};
 
-            let text = format_regex(
-                format_text(
-                    replace_from_emoji(text), env.block_text_in_chat.clone()
-                ), env.chat_regex.clone()
-            );
+            let text = msg.text.clone();
+            let caps = pattern.regex.captures(&text).unwrap();
 
-            let name = format_regex(
-                format_text(name, env.block_text_in_nickname.clone()
-                ), env.nickname_regex.clone()
-            );
-
-            let send_msg = Msg::new(
-                msg.server_name.clone(),
-                name,
-                msg.message_thread_id.clone(),
-                pattern.name.clone(),
-                text
-            );
-
-            let json = match serde_json::to_string_pretty(&send_msg) {
-                Ok(str) => {str}
-                Err(err) => {error!("Json Serialize Error: {}", err); break}
+            let json = match pattern.name.as_str() {
+                "TWStatusRegex" => {tw_status_handler(msg, caps, pattern).await},
+                "InfStatusRegex" => {inf_status_regex(msg, caps, pattern).await},
+                "SStatusRegex" => {status_handler(msg, caps, pattern, false).await},
+                "StatusRegex" => {status_handler(msg, caps, pattern, true).await},
+                _ => {chat_handler(msg, &env, caps, pattern).await}
             };
+
+            if json.is_empty() {
+                break
+            }
+
 
             debug!("sended json to tw.messages: {}", json);
             js.publish("tw.messages", json.into())

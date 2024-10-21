@@ -8,36 +8,30 @@ use regex::Regex;
 use serde_derive::{Deserialize, Serialize};
 use crate::util::template;
 
-#[derive(Debug, Deserialize, Serialize)]
-pub struct Msg {
-    pub server_name: String,
+
+#[derive(Debug, Serialize)]
+pub struct DataStatus {
+    pub time: Option<String>,
+    pub user_id: String,
+    pub addr: String,
     pub name: String,
+    pub version: Option<String>
+}
+
+
+#[derive(Debug, Serialize)]
+pub struct Msg {
+    pub data: Option<DataStatus>,
+    pub server_name: Option<String>,
+    pub name: Option<String>,
     pub message_thread_id: String,
     pub regex_type: String,
-    pub text: String,
+    pub text: Option<String>,
 }
 
 
-impl Msg {
-    pub fn new(
-        server_name: String,
-        name: String,
-        message_thread_id: String,
-        regex_type: String,
-        text: String
-    ) -> Msg {
-        Msg {
-            server_name,
-            name,
-            message_thread_id,
-            regex_type,
-            text,
-        }
-    }
-}
 
-
-#[derive(Default, Debug, PartialEq, Deserialize)]
+#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
 pub struct MsgHandler {
     pub server_name: String,
     pub message_thread_id: String,
