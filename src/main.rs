@@ -39,16 +39,13 @@ async fn main() -> Result<(), async_nats::Error> {
         let msg: MsgHandler = match std::str::from_utf8(&message.payload) {
             Ok(json_string) => serde_json::from_str(json_string).unwrap_or_else(|err| {
                 error!("Error deserializing JSON: {}", err);
-                MsgHandler::default()
+                exit(0);
             }),
             Err(err) => {
                 error!("Error converting bytes to string: {}", err);
-                MsgHandler::default()
+                exit(0);
             }
         };
-        if msg.is_default() {
-            continue;
-        }
 
         for pattern in DD_PATTERNS.iter() {
             if !pattern.regex.is_match(&msg.text) {

@@ -1,3 +1,4 @@
+use std::process::exit;
 use log::error;
 use regex::Captures;
 use crate::emojis::replace_from_emoji;
@@ -34,7 +35,7 @@ pub async fn chat_handler(msg: MsgHandler, env: &Env, caps: Captures<'_ >, patte
         Ok(str) => {str}
         Err(err) => {
             error!("Json Serialize Error: {}", err);
-            String::default()
+            exit(0);
         }
     }
 }
@@ -122,7 +123,7 @@ fn generator(data: DataStatus, server_name: String, message_thread_id: String, p
         Ok(str) => {str}
         Err(err) => {
             error!("Json Serialize Error: {}", err);
-            String::default()
+            exit(0);
         }
     }
 }

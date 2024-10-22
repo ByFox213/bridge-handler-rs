@@ -31,17 +31,11 @@ pub struct Msg {
 
 
 
-#[derive(Default, Debug, Clone, PartialEq, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct MsgHandler {
     pub server_name: String,
     pub message_thread_id: String,
     pub text: String,
-}
-
-impl MsgHandler {
-    pub fn is_default(&self) -> bool {
-        *self == MsgHandler::default()
-    }
 }
 
 
