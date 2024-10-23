@@ -32,10 +32,11 @@ async fn main() -> Result<(), async_nats::Error> {
     };
     let js = async_nats::jetstream::new(nc.clone());
 
-    let mut subscriber = nc.queue_subscribe("tw.handler", "handler".to_string()).await?;
+    let mut subscriber = nc.queue_subscribe("tw.econ.read.*", "handler".to_string()).await?;
 
     info!("Handler started");
     while let Some(message) = subscriber.next().await {
+        debug!("message received from {}, length {}", message.subject, message.length);
         let msg: MsgHandler = match std::str::from_utf8(&message.payload) {
             Ok(json_string) => serde_json::from_str(json_string).unwrap_or_else(|err| {
                 error!("Error deserializing JSON: {}", err);
@@ -46,7 +47,7 @@ async fn main() -> Result<(), async_nats::Error> {
                 exit(0);
             }
         };
-
+        let message_thread_id = msg.message_thread_id.clone();
         for pattern in DD_PATTERNS.iter() {
             if !pattern.regex.is_match(&msg.text) {
                 continue;
@@ -68,9 +69,8 @@ async fn main() -> Result<(), async_nats::Error> {
                 break
             }
 
-
-            debug!("sended json to tw.messages: {}", json);
-            js.publish("tw.messages", json.into())
+            debug!("sent json to tw.tg.(id): {}", json);
+            js.publish("tw.tg.".to_owned() + message_thread_id.as_ref(), json.into())
                 .await
                 .expect("Error publish message to tw.messages");
             break
