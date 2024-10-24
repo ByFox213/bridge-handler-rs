@@ -10,18 +10,7 @@ use crate::util::template;
 
 
 #[derive(Debug, Serialize)]
-pub struct DataStatus {
-    pub time: Option<String>,
-    pub user_id: String,
-    pub addr: String,
-    pub name: String,
-    pub version: Option<String>
-}
-
-
-#[derive(Debug, Serialize)]
 pub struct Msg {
-    pub data: Option<DataStatus>,
     pub server_name: Option<String>,
     pub name: Option<String>,
     pub message_thread_id: String,
